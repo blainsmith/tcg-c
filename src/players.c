@@ -47,6 +47,24 @@ bool tcg_pull_card(tcg_player *player) {
     return true;
 }
 
+int tcg_play_card(tcg_player *player) {
+    int rc = rand() % player->hand_size;
+    int card = player->hand[rc];
+    
+    if (player->mana >= card) {
+        player->mana -= card;
+
+        int c;
+        for (c = rc; c < player->hand_size; c++) {
+            player->hand[c] = player->hand[c+1];
+        }
+        player->hand_size--;
+
+        return card;
+    }
+    return 0;
+}
+
 void display_player(tcg_player *player) {
     int i;
     printf("+----------------------------\n");
